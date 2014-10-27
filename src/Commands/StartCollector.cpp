@@ -1,0 +1,32 @@
+#include "StartCollector.h"
+
+
+StartCollector::StartCollector() : Command("StartCollector") { }
+
+StartCollector::~StartCollector() { }
+
+void StartCollector::Initialize()
+{
+    if (Robot::collector) Robot::collector->Set(Relay::kForward);
+}
+
+void StartCollector::Execute()
+{
+    return;
+}
+
+bool StartCollector::IsFinished()
+{
+    return true;
+}
+
+void StartCollector::End()
+{
+    return;
+}
+
+void StartCollector::Interrupted()
+{
+    return;
+}
+

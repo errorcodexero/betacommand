@@ -1,0 +1,318 @@
+
+#include <WPILib.h>
+#include "../Components/Tachometer.h"
+
+#define kMinSpeed	1000.
+#define kMaxSpeed	3500.
+#define kMaxOutput	0.70
+#define defaultTop	1400.
+#define defaultBottom	2850.
+#define defaultP	0.300
+#define defaultI	0.003
+#define defaultD	0.000
+#define defaultThreshold 0.80
+
+class Wheel
+{
+public:
+	Wheel( CANJaguar *motor1, CANJaguar *motor2, Tachometer *tach, float rpm,
+		float p = defaultP, float i = defaultI, float d = defaultD,
+		float pidThreshold = defaultThreshold );
+
+	~Wheel();
+
+	void SetPID( float p, float i, float d );
+	// no GetPID!
+
+	void SetThreshold( float pidThreshold );
+	float getThreshold();
+
+	void Set( float rpm );
+	float Get();
+
+	void Start();
+	void Stop();
+	void Run();
+
+	bool InPID();
+	bool UpToSpeed( float tolerance = 0.03 );
+
+private:
+	CANJaguar *m_motor1;
+	CANJaguar *m_motor2;
+	Tachometer *m_tach;
+	float m_p, m_i, m_d;
+	float m_pidThreshold;
+	float m_set;
+	bool m_running;
+	bool m_pid;
+	float m_tachSpeed;
+	float m_jagSpeed;
+	float m_current1;
+	float m_current2;
+}
+
+
+class Shooter : public Subsystem
+{
+public:
+	Shooter( Wheel *top, Wheel *bottom );
+	~Shooter();
+
+	void Start();
+	void Stop();
+	void Run();
+
+	bool IsReady();
+
+private:
+	Wheel *m_top;
+	Wheel *m_bottom;
+	enum {
+	    STOPPED,
+	    BOTTOM,
+	    TOP,
+	    SHOOT,
+	} m_state;
+}
+
+
+#include "Shooter.h"
+
+
+Wheel::Wheel( CANJaguar *motor1, CANJaguar *motor2, Tachometer *tach,
+		    float rpm, float p, float i, float d,
+		    float pidThreshold )
+{
+    m_motor1 = motor1;
+    m_motor1->SetSafetyEnabled(false);	// motor safety off while configuring
+    m_motor1->SetSpeedReference( CANJaguar::kSpeedRef_Encoder );
+    m_motor1->ConfigEncoderCodesPerRev( 1 );
+
+    m_motor2 = motor2;
+    m_motor2->SetSafetyEnabled(false);	// motor safety off while configuring
+    m_motor2->SetSpeedReference( CANJaguar::kSpeedRef_Encoder );
+    m_motor2->ConfigEncoderCodesPerRev( 1 );
+
+    m_tach = tach;
+
+    m_set = rpm;
+    m_p = p;
+    m_i = i;
+    m_d = d;
+    m_pidThreshold = pidThreshold;
+    m_running = false;
+    m_pid = false;
+    m_tachSpeed = 0.;
+    m_jagSpeed = 0.;
+    m_current1 = 0.;
+    m_current2 = 0.;
+}
+
+void Wheel::SetPID( float p, float i, float d )
+{
+    m_p = p;
+    m_i = i;
+    m_d = d;
+
+    if (m_pid) {
+	motor1->SetPID( m_p, m_i, m_d );
+	motor1->Set( m_set );
+	// motor2->SetPID( m_p, m_i, m_d );
+	// motor2->Set( m_set );
+    }
+}
+
+void Wheel::SetThreshold( float pidThreshold )
+{
+    m_pidThreshold = pidThreshold;
+
+    // Run();  // threshold change may take us into or out of PID control
+}
+
+void Wheel::Set( float rpm )
+{
+    m_set = rpm;
+
+    if (m_pid) {
+	motor1->Set( m_set );
+	// motor2->Set( m_set );
+    }
+
+    // Run();  // threshold change may take us into or out of PID control
+}
+
+float Wheel::Get()
+{
+    return m_set;
+}
+
+
+// put jag in PID speed control mode, enabled
+void jagPID( CANJaguar *jag, float setpoint )
+{
+    jag->SetSpeedMode( CANJaguar::Encoder, 1, m_p, m_i, m_d );
+    jag->EnableControl();
+    jag->SetExpiration(2.0);
+    jag->Set(setpoint, 0);
+    jag->SetSafetyEnabled(true);
+}
+
+// put Jag in %vbus control mode, enabled
+void jagVbus( CANJaguar *jag, float setpoint )
+{
+    jag->SetPercentMode( CANJaguar::Encoder, 1 );
+    jag->EnableControl();
+    jag->SetExpiration(2.0);
+    jag->Set(setpoint, 0);
+    jag->SetSafetyEnabled(true);
+}
+
+// put Jag in %vbus control mode, disabled
+void jagStop( CANJaguar *jag )
+{
+    jag->Set(0.0, 0);
+    jag->DisableControl();
+    jag->SetSafetyEnabled(false);
+}
+
+void Wheel::Start()
+{
+    if (!m_running) {
+	m_running = true;
+	m_pid = false;
+	// start motors in %vbus mode
+	// kMaxOutput chosen to limit startup current
+	jagVbus(motor1, kMaxOutput);
+	jagVbus(motor2, kMaxOutput);
+    }
+}
+
+void Wheel::Stop()
+{
+    if (m_running) {
+	m_running = false;
+	jagStop(motor1);
+	jagStop(motor2);
+    }
+}
+
+bool Wheel::Run()
+{
+    // Get wheel output voltage, current and measured speed
+    m_current1 = motor1->GetOutputCurrent();
+    m_current2 = motor2->GetOutputCurrent();
+    m_jagSpeed  = motor1->GetSpeed(); 
+    m_tachSpeed = tach->PIDGet();
+
+    // Send values to SmartDashboard
+    SmartDashboard::PutNumber("Current 1", m_current1);
+    SmartDashboard::PutNumber("Current 2", m_current2);
+    SmartDashboard::PutNumber("Jag      ", m_jagSpeed);
+    SmartDashboard::PutNumber("Tach     ", m_tachSpeed);
+
+    if (running) {
+	if (m_pid) {
+	    if (m_jagSpeed < m_set * m_pidThreshold) {
+		m_pid = false;
+		// below threshold: switch both motors to "full" output
+		jagVbus(motor1, kMaxOutput);
+		jagVbus(motor2, kMaxOutput);
+	    } else {
+		// above threshold: run motor 1 PID, motor 2 off
+		motor1->Set(m_set);
+		motor2->Set(0.0);
+	    }
+	} else {
+	    if (m_jagSpeed >= m_set * m_pIDThreshold) {
+		// above threshold: switch motor 1 PID, motor 2 off
+		m_pid = true;
+		jagPID(motor1, m_set);
+		motor2->Set(0.0);
+	    } else {
+		// below threshold: run both motors at full output
+		motor1->Set(kMaxOutput);
+		motor2->Set(kMaxOutput);
+	    }
+	}
+    }
+}
+
+bool Wheel:InPID()
+{
+    return m_running && m_pid;
+}
+
+
+bool Wheel::UpToSpeed( float tolerance )
+{
+    return m_running && m_pid && (fabs(m_jagSpeed - m_set) <= m_set * tolerance);
+}
+
+
+Shooter::Shooter( Wheel *top, Wheel *bottom )
+{
+    m_top = top;
+    m_bottom = bottom;
+    m_state = STOPPED;
+}
+
+Shooter::~Shooter()
+{
+    ;
+}
+
+void Shooter::Start()
+{
+    if (m_state == STOPPED) {
+	m_bottom->Start();
+	m_state = BOTTOM;
+    }
+}
+
+void Shooter::Stop()
+{
+    m_top->Stop();
+    m_bottom->Stop();
+    m_state = STOPPED;
+}
+
+void Shooter::Run()
+{
+    switch (m_state) {
+    case STOPPED:
+	break;
+
+    case BOTTOM:
+	m_bottom->Run();
+	if (m_bottom->InPID()) {
+	    m_state = TOP;
+	    m_top->Start();
+	}
+	break;
+
+    case TOP:
+	m_bottom->Run();
+	m_top->Run();
+	if (m_bottom->IsUpToSpeed() && m_top->IsUpToSpeed()) {
+	    m_state = SHOOT;
+	}
+	break;
+
+    case SHOOT:
+	m_bottom->Run();
+	m_top->Run();
+	if (!m_bottom->InPID()) {
+	    m_top->Stop();
+	    m_state = BOTTOM;
+	} else if (!m_bottom->IsUpToSpeed() || !m_top->IsUpToSpeed()) {
+	    m_state = TOP;
+	}
+	break;
+    }
+}
+
+bool Shooter::IsReady()
+{
+    return (m_state == SHOOT);
+}
