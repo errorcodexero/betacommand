@@ -1,4 +1,5 @@
 #include "CloseFingers.h"
+#include "../Robot.h"
 
 
 CloseFingers::CloseFingers() : Command("CloseFingers") { }

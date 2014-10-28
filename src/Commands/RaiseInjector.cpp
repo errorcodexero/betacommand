@@ -1,4 +1,5 @@
 #include "RaiseInjector.h"
+#include "../Robot.h"
 
 
 RaiseInjector::RaiseInjector() : Command("RaiseInjector") { }

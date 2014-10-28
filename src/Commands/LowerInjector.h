@@ -1,6 +1,10 @@
+// FIRST Team 1425 "Error Code Xero"
+// for FRC 2014 post-season "Aerial Assist"
+
+#ifndef _LOWERINJECTOR_H_
+#define _LOWERINJECTOR_H_
+
 #include <WPILib.h>
-#include <Commands/Command.h>
-#include "../Robot.h"
 
 class LowerInjector : public Command
 {
@@ -16,4 +20,4 @@ protected:
     virtual void Interrupted();
 };
 
-
+#endif // _LOWERINJECTOR_H_

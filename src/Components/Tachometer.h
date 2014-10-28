@@ -11,7 +11,7 @@
 // The Tachometer determines wheel speed by measuring the interval
 // between rising edges of the Hall effect sensor output.
 
-class Tachometer : public PIDSource
+class Tachometer : public SensorBase, public PIDSource, public LiveWindowSendable
 {
 public:
     Tachometer( uint32_t channel );
@@ -20,7 +20,18 @@ public:
     uint32_t GetInterval( void );
     virtual double PIDGet( void );
 
+    // Sendable
+    virtual void InitTable(ITable* subtable);
+    virtual ITable* GetTable();
+    virtual std::string GetSmartDashboardType();
+
+    // LiveWindowSendable
+    virtual void StartLiveWindowMode();
+    virtual void StopLiveWindowMode();
+    virtual void UpdateTable();
+
 private:
+    ITable* table;
     DigitalInput sensor;
     NTReentrantSemaphore tachSem;
 

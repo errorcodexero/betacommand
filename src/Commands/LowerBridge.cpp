@@ -1,4 +1,5 @@
 #include "LowerBridge.h"
+#include "../Robot.h"
 
 
 LowerBridge::LowerBridge() : Command("LowerBridge") { }

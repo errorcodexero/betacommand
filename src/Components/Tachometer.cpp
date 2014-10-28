@@ -7,7 +7,11 @@
 #include "Tachometer.h"
 
 Tachometer::Tachometer( uint32_t channel ) :
-    sensor( channel ),
+    SensorBase(),
+    PIDSource(),
+    LiveWindowSendable(),
+    table(NULL),
+    sensor(channel),
     lastTime(0),
     lastInterval(0),
     sampleValid(false),
@@ -82,4 +86,28 @@ Tachometer::PIDGet()
 	return 0.;
     }
 }
+
+void Tachometer::UpdateTable() {
+    if (table != NULL) {
+	table->PutNumber("Speed", PIDGet());
+    }
+}
+
+void Tachometer::StartLiveWindowMode() { }
+
+void Tachometer::StopLiveWindowMode() { } 
+
+std::string Tachometer::GetSmartDashboardType() {
+    return "Tachometer";
+}
+
+void Tachometer::InitTable(ITable *subTable) {
+    table = subTable;
+    UpdateTable();
+}
+
+ITable * Tachometer::GetTable() {
+    return table;
+}
+
 

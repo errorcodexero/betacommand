@@ -1,10 +1,10 @@
 // FIRST Team 1425 "Error Code Xero"
 // for FRC 2013 game "Ultimate Ascent"
 
-#ifndef DRIVECOMMAND_H
-#define DRIVECOMMAND_H
+#ifndef _DRIVECOMMAND_H_
+#define _DRIVECOMMAND_H_
 
-#include <Commands/Command.h>
+#include <WPILib.h>
 
 // This is the default command for the drive base:
 // drive under joystick control.
@@ -19,4 +19,4 @@ public:
     virtual void Interrupted();
 };
 
-#endif
+#endif // _DRIVECOMMAND_H_

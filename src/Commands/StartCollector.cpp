@@ -1,4 +1,5 @@
 #include "StartCollector.h"
+#include "../Robot.h"
 
 
 StartCollector::StartCollector() : Command("StartCollector") { }
@@ -7,7 +8,7 @@ StartCollector::~StartCollector() { }
 
 void StartCollector::Initialize()
 {
-    if (Robot::collector) Robot::collector->Set(Relay::kForward);
+    if (Robot::collector) Robot::collector->Set(1.0);
 }
 
 void StartCollector::Execute()

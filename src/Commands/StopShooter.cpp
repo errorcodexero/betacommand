@@ -1,4 +1,5 @@
 #include "StopShooter.h"
+#include "../Robot.h"
 
 
 StopShooter::StopShooter() : Command("StopShooter") { }

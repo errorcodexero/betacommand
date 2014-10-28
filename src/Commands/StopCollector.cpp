@@ -1,4 +1,5 @@
 #include "StopCollector.h"
+#include "../Robot.h"
 
 
 StopCollector::StopCollector() : Command("StopCollector") { }
@@ -7,7 +8,7 @@ StopCollector::~StopCollector() { }
 
 void StopCollector::Initialize()
 {
-    if (Robot::collector) Robot::collector->Set(Relay::kOff);
+    if (Robot::collector) Robot::collector->Set(0.0);
 }
 
 void StopCollector::Execute()

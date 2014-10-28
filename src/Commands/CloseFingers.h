@@ -1,6 +1,10 @@
+// FIRST Team 1425 "Error Code Xero"
+// for FRC 2014 post-season "Aerial Assist"
+
+#ifndef _CLOSEFINGERS_H_
+#define _CLOSEFINGERS_H_
+
 #include <WPILib.h>
-#include <Commands/Command.h>
-#include "../Robot.h"
 
 class CloseFingers : public Command
 {
@@ -17,3 +21,4 @@ protected:
 };
 
 
+#endif // _CLOSEFINGERS_H_

@@ -1,4 +1,5 @@
 #include "LowerInjector.h"
+#include "../Robot.h"
 
 
 LowerInjector::LowerInjector() : Command("LowerInjector") { }

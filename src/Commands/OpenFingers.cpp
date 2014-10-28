@@ -1,4 +1,5 @@
 #include "OpenFingers.h"
+#include "../Robot.h"
 
 
 OpenFingers::OpenFingers() : Command("OpenFingers") { }

@@ -4,7 +4,7 @@
 #ifndef TIMED_DRIVE_H
 #define TIMED_DRIVE_H
 
-#include <Commands/Command.h>
+#include <WPILib.h>
 
 class TimedDrive: public Command {
 private:
@@ -22,4 +22,4 @@ public:
     virtual void Interrupted();
 };
 
-#endif
+#endif // _TIMED_DRIVE_H_

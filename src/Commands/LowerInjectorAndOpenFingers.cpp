@@ -1,4 +1,6 @@
 #include "LowerInjectorAndOpenFingers.h"
+#include "LowerInjector.h"
+#include "OpenFingers.h"
 
 
 LowerInjectorAndOpenFingers::LowerInjectorAndOpenFingers() :
