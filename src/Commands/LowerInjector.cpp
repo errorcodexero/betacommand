@@ -8,7 +8,8 @@ LowerInjector::~LowerInjector() { }
 
 void LowerInjector::Initialize()
 {
-    if (Robot::injector) Robot::injector->Set(false);
+    if (Robot::injector1) Robot::injector1->Set(DoubleSolenoid::kReverse);
+    if (Robot::injector2) Robot::injector2->Set(DoubleSolenoid::kReverse);
 }
 
 void LowerInjector::Execute()
@@ -18,7 +19,8 @@ void LowerInjector::Execute()
 
 bool LowerInjector::IsFinished()
 {
-    return !(Robot::injector && Robot::injector->IsMoving());
+    return !( (Robot::injector1 && Robot::injector1->IsMoving()) ||
+	      (Robot::injector2 && Robot::injector2->IsMoving()) );
 }
 
 void LowerInjector::End()

@@ -30,5 +30,29 @@ private:
 	void UpdatePosition();
 };
 
+class SlowDoubleSolenoid : public DoubleSolenoid
+{
+public:
+	explicit SlowDoubleSolenoid(uint32_t fwdChannel, uint32_t revChannel, float extendTime, float retractTime, DoubleSolenoid::Value initialPosition = kOff);
+	virtual ~SlowDoubleSolenoid();
+	virtual void SetExtendTime(float extendTime);
+	virtual void SetRetractTime(float retractTime);
+	virtual float GetExtendTime();
+	virtual float GetRetractTime();
+	virtual void Set(DoubleSolenoid::Value value);
+	virtual DoubleSolenoid::Value Get();
+	virtual float GetPosition();
+	virtual bool IsMoving();
+
+private:
+	float m_extendTime;
+	float m_retractTime;
+	float m_position;
+	uint32_t m_startTime;
+	bool m_moving;
+
+	void UpdatePosition();
+};
+
 #endif // _SLOW_SOLENOID_H_
 

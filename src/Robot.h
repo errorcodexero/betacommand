@@ -38,22 +38,18 @@ public:
 
 	static Compressor* compressor;
 
-	static Victor* leftMotor1;
-	// static Victor* leftMotor2;
-	// static TwoMotor<Victor>* leftMotors;
-	static Victor* rightMotor1;
-	// static Victor* rightMotor2;
-	// static TwoMotor<Victor>* rightMotors;
-	static Victor* rearMotor1;
-	// static Victor* rearMotor2;
-	// static TwoMotor<Victor>* rearMotors;
+	static Victor* leftMotor;
+	static Victor* rightMotor;
+	static Victor* rearMotor;
 	static RateGyro* gyro;
 	static DriveBase* driveBase;
 
-	static SlowSolenoid* bridge;
+	static SlowDoubleSolenoid* bridge;
 	static Victor* collector;
+	static SlowDoubleSolenoid* injector1;
+	static SlowDoubleSolenoid* injector2;
+	static SlowSolenoid* ejector;
 	static SlowSolenoid* fingers;
-	static SlowSolenoid* injector;
 	static CANJaguar* bottomMotor1;
 	static CANJaguar* bottomMotor2;
 	static TwoMotor<CANJaguar>* bottomMotors;

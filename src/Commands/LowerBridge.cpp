@@ -8,7 +8,7 @@ LowerBridge::~LowerBridge() { }
 
 void LowerBridge::Initialize()
 {
-    if (Robot::bridge) Robot::bridge->Set(true);
+    if (Robot::bridge) Robot::bridge->Set(DoubleSolenoid::kForward);
 }
 
 void LowerBridge::Execute()

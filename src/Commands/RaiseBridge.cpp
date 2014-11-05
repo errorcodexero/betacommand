@@ -8,7 +8,7 @@ RaiseBridge::~RaiseBridge() { }
 
 void RaiseBridge::Initialize()
 {
-    if (Robot::bridge) Robot::bridge->Set(false);
+    if (Robot::bridge) Robot::bridge->Set(DoubleSolenoid::kReverse);
 }
 
 void RaiseBridge::Execute()

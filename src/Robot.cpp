@@ -8,27 +8,20 @@
 // Initialize a single static instance of all of your (components and) subsystems to NULL
 Compressor* Robot::compressor = NULL;
 
-Victor* Robot::leftMotor1 = NULL;
-// Victor* Robot::leftMotor2 = NULL;
-// TwoMotor<Victor>* Robot::leftMotors = NULL;
-
-Victor* Robot::rightMotor1 = NULL;
-// Victor* Robot::rightMotor2 = NULL;
-// TwoMotor<Victor>* Robot::rightMotors = NULL;
-
-Victor* Robot::rearMotor1 = NULL;
-// Victor* Robot::rearMotor2 = NULL;
-// TwoMotor<Victor>* Robot::rearMotors = NULL;
+Victor* Robot::leftMotor = NULL;
+Victor* Robot::rightMotor = NULL;
+Victor* Robot::rearMotor = NULL;
 
 RateGyro* Robot::gyro = NULL;
 
 DriveBase* Robot::driveBase = NULL;
 
-SlowSolenoid* Robot::bridge = NULL;
+SlowDoubleSolenoid* Robot::bridge = NULL;
 Victor* Robot::collector = NULL;
-
+SlowDoubleSolenoid* Robot::injector1 = NULL;
+SlowDoubleSolenoid* Robot::injector2 = NULL;
+SlowSolenoid* Robot::ejector = NULL;
 SlowSolenoid* Robot::fingers = NULL;
-SlowSolenoid* Robot::injector = NULL;
 
 CANJaguar* Robot::bottomMotor1 = NULL;
 CANJaguar* Robot::bottomMotor2 = NULL;
@@ -67,27 +60,29 @@ StopShooter* Robot::stopShooter = NULL;
 Command* Robot::autonomousCommand = NULL;
 
 // Define where all the components are connected
-static constexpr int PWM_LEFT_1  = 0;
-// static constexpr int PWM_LEFT_2  = 0;
-static constexpr int PWM_RIGHT_1 = 1;
-// static constexpr int PWM_RIGHT_2 = 1;
-static constexpr int PWM_REAR_1  = 2;
-// static constexpr int PWM_REAR_2  = 2;
+static constexpr int PWM_LEFT  = 0;
+static constexpr int PWM_RIGHT = 1;
+static constexpr int PWM_REAR  = 2;
 static constexpr int PWM_COLLECTOR = 3;
 
-static constexpr int CAN_TOP1 = 5;
-static constexpr int CAN_TOP2 = 6;
-static constexpr int CAN_BOTTOM1 = 7;
-static constexpr int CAN_BOTTOM2 = 8;
+static constexpr int CAN_TOP1 = 1;
+static constexpr int CAN_TOP2 = 2;
+static constexpr int CAN_BOTTOM1 = 3;
+static constexpr int CAN_BOTTOM2 = 4;
 
 static constexpr int ANALOG_GYRO = 0;
 
 static constexpr int DIN_TOP = 0;
 static constexpr int DIN_BOTTOM = 1;
 
-static constexpr int SOL_BRIDGE = 0;
-static constexpr int SOL_FINGERS = 1;
-static constexpr int SOL_INJECTOR = 2;
+static constexpr int SOL_BRIDGE_DOWN = 0;
+static constexpr int SOL_BRIDGE_UP = 1;
+static constexpr int SOL_INJECTOR_DOWN_1 = 2;
+static constexpr int SOL_INJECTOR_DOWN_2 = 3;	// dummy
+static constexpr int SOL_INJECTOR_UP_1 = 4;
+static constexpr int SOL_INJECTOR_UP_2 = 5;
+static constexpr int SOL_EJECTOR = 6;
+static constexpr int SOL_FINGERS = 7;
 
 void Robot::RobotInit()
 {
@@ -95,41 +90,36 @@ void Robot::RobotInit()
 
     compressor = new Compressor();
 
-    leftMotor1 = new Victor(PWM_LEFT_1);
-    lw->AddActuator("DriveBase", "Left1",  leftMotor1);
-    // leftMotor2 = new Victor(PWM_LEFT_2);
-    // lw->AddActuator("DriveBase", "Left2",  leftMotor2);
-    // leftMotors  = new TwoMotor<Victor>(leftMotor1, leftMotor2);
+    leftMotor = new Victor(PWM_LEFT);
+    lw->AddActuator("DriveBase", "Left",  leftMotor);
 
-    rightMotor1 = new Victor(PWM_RIGHT_1);
-    lw->AddActuator("DriveBase", "Right1", rightMotor1);
-    // rightMotor2 = new Victor(PWM_RIGHT_2);
-    // lw->AddActuator("DriveBase", "Right2", rightMotor2);
-    // rightMotors = new TwoMotor<Victor>(rightMotor1, rightMotor2);
+    rightMotor = new Victor(PWM_RIGHT);
+    lw->AddActuator("DriveBase", "Right", rightMotor);
 
-    rearMotor1 = new Victor(PWM_REAR_1);
-    lw->AddActuator("DriveBase", "Rear1",  rearMotor1);
-    // rearMotor2 = new Victor(PWM_REAR_2);
-    // lw->AddActuator("DriveBase", "Rear2",  rearMotor2);
-    // rearMotors  = new TwoMotor<Victor>(rearMotor1, rearMotor2);
+    rearMotor = new Victor(PWM_REAR);
+    lw->AddActuator("DriveBase", "Rear",  rearMotor);
 
     gyro = new RateGyro(ANALOG_GYRO);
     lw->AddSensor("DriveBase", "Gyro", gyro);
 
-    // driveBase = new DriveBase(leftMotors, rightMotors, rearMotors, gyro);
-    driveBase = new DriveBase(leftMotor1, rightMotor1, rearMotor1, gyro);
+    driveBase = new DriveBase(leftMotor, rightMotor, rearMotor, gyro);
 
     collector = new Victor(PWM_COLLECTOR);
     lw->AddActuator("Collector", "Motor", collector);
 
-    bridge = new SlowSolenoid(SOL_BRIDGE, 2.5, 1.8, true);
+    bridge = new SlowDoubleSolenoid(SOL_BRIDGE_DOWN, SOL_BRIDGE_UP, 2.5, 1.8, DoubleSolenoid::kReverse);
     lw->AddActuator("Collector", "Bridge", bridge);
 
-    fingers = new SlowSolenoid(SOL_FINGERS, 0.2, 0.2, false);
-    lw->AddActuator("Injector", "Fingers", fingers);
+    injector1 = new SlowDoubleSolenoid(SOL_INJECTOR_UP_1, SOL_INJECTOR_DOWN_1, 0.75, 1.8, DoubleSolenoid::kReverse);
+    lw->AddActuator("Injector", "Injector1", injector1);
+    injector2 = new SlowDoubleSolenoid(SOL_INJECTOR_UP_2, SOL_INJECTOR_DOWN_2, 0.75, 1.8, DoubleSolenoid::kReverse);
+    lw->AddActuator("Injector", "Injector2", injector2);
 
-    injector = new SlowSolenoid(SOL_INJECTOR, 0.5, 0.5, false);
-    lw->AddActuator("Injector", "Injector", injector);
+    ejector = new SlowSolenoid(SOL_EJECTOR, 0.2, 0.2, false);
+    lw->AddActuator("Ejector", "Ejector", ejector);
+
+    fingers = new SlowSolenoid(SOL_FINGERS, 0.2, 0.2, true);
+    lw->AddActuator("Injector", "Fingers", fingers);
 
     bottomMotor1 = new CANJaguar(CAN_BOTTOM1);
     lw->AddActuator("BottomWheel", "Motor1", bottomMotor1);
