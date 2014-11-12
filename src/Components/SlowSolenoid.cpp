@@ -2,6 +2,11 @@
 // for FRC 2014 post-season "Aerial Assist"
 
 #include "SlowSolenoid.h"
+#include <ostream>
+#include <cstdio>
+using namespace std;
+
+#define	SLOW	1.0		// change to e.g. 0.10 for debugging
 
 SlowSolenoid::SlowSolenoid( uint32_t channel, float extendTime, float retractTime,
 				bool initialPosition )
@@ -9,13 +14,9 @@ SlowSolenoid::SlowSolenoid( uint32_t channel, float extendTime, float retractTim
 {
     m_extendTime = extendTime;
     m_retractTime = retractTime;
-    if (initialPosition) {
-	Solenoid::Set(true);
-	m_position = 1.0;
-    } else {
-	Solenoid::Set(false);
-	m_position = 0.0;
-    }
+    m_direction = initialPosition;
+    Solenoid::Set(m_direction);
+    m_position = (m_direction ? 1.0 : 0.0);
     m_startTime = 0;
     m_moving = false;
 }
@@ -49,7 +50,10 @@ void SlowSolenoid::Set( bool on )
 {
     UpdatePosition();
     Solenoid::Set(on);
+    m_startTime = GetFPGATime();
+    m_direction = on;
     m_moving = true;
+    cout << "SlowSolenoid::Set(" << on << ") from " << m_position << " at " << m_startTime << endl << flush;
 }
 
 bool SlowSolenoid::Get()
@@ -76,19 +80,21 @@ void SlowSolenoid::UpdatePosition()
 	float deltaTime = (now - m_startTime) * 1.0e-6;
 	float newPosition;
 
-	if (Get()) {
+	if (m_direction) {
 	    // extending
-	    newPosition = m_position + deltaTime / m_extendTime;
+	    newPosition = m_position + SLOW * deltaTime / m_extendTime;
 	    if (newPosition > 1.0) {
 		newPosition = 1.0;
 		m_moving = false;
+		cout << "SlowSolenoid stopped at " << newPosition << " at " << now << endl << flush;
 	    }
 	} else {
 	    // retracting
-	    newPosition = m_position - deltaTime / m_retractTime;
+	    newPosition = m_position - SLOW * deltaTime / m_retractTime;
 	    if (newPosition < 0.0) {
 		newPosition = 0.0;
 		m_moving = false;
+		cout << "SlowSolenoid stopped at " << newPosition << " at " << now << endl << flush;
 	    }
 	}
 	m_position = newPosition;
@@ -103,6 +109,7 @@ SlowDoubleSolenoid::SlowDoubleSolenoid( uint32_t fwdChannel, uint32_t revChannel
 {
     m_extendTime = extendTime;
     m_retractTime = retractTime;
+    m_direction = initialPosition;
     DoubleSolenoid::Set(initialPosition);
     switch (initialPosition) {
     case kForward:
@@ -148,6 +155,8 @@ void SlowDoubleSolenoid::Set( DoubleSolenoid::Value value )
 {
     UpdatePosition();
     DoubleSolenoid::Set(value);
+    m_startTime = GetFPGATime();
+    m_direction = value;
     m_moving = (value != kOff);
 }
 
@@ -175,10 +184,10 @@ void SlowDoubleSolenoid::UpdatePosition()
 	float deltaTime = (now - m_startTime) * 1.0e-6;
 	float newPosition;
 
-	switch (Get()) {
+	switch (m_direction) {
 	case kForward:
 	    // extending
-	    newPosition = m_position + deltaTime / m_extendTime;
+	    newPosition = m_position + SLOW * deltaTime / m_extendTime;
 	    if (newPosition > 1.0) {
 		newPosition = 1.0;
 		m_moving = false;
@@ -186,7 +195,7 @@ void SlowDoubleSolenoid::UpdatePosition()
 	    break;
 	case kReverse:
 	    // retracting
-	    newPosition = m_position - deltaTime / m_retractTime;
+	    newPosition = m_position - SLOW * deltaTime / m_retractTime;
 	    if (newPosition < 0.0) {
 		newPosition = 0.0;
 		m_moving = false;

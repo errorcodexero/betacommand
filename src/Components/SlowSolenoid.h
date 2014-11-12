@@ -23,6 +23,7 @@ public:
 private:
 	float m_extendTime;
 	float m_retractTime;
+	bool m_direction;
 	float m_position;
 	uint32_t m_startTime;
 	bool m_moving;
@@ -47,6 +48,7 @@ public:
 private:
 	float m_extendTime;
 	float m_retractTime;
+	DoubleSolenoid::Value m_direction;
 	float m_position;
 	uint32_t m_startTime;
 	bool m_moving;

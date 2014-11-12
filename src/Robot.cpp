@@ -157,7 +157,7 @@ void Robot::RobotInit()
     SmartDashboard::PutData("CollectMode", collectMode);
 
     driveCommand = new DriveCommand();
-    SmartDashboard::PutData("DriveCommand", driveCommand);
+    // SmartDashboard::PutData("DriveCommand", driveCommand);
 
     holdMode = new HoldMode();
     SmartDashboard::PutData("HoldMode", holdMode);
