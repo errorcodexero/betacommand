@@ -10,10 +10,10 @@ DriveBase::DriveBase( SpeedController *left,
     m_left(left),
     m_right(right),
     m_rear(rear),
-    m_drive3(new RobotDrive3(left, right, rear)),
+    m_drive3(new RobotDrive3(rear, right, left)),
     m_gyro(gyro),
-	m_gyroZero(0),
-    m_defaultCommand(NULL),
+    m_gyroZero(0),
+    m_defaultCommand(),
     m_started(false)
 {
     Stop();
@@ -96,7 +96,7 @@ void DriveBase::Drive3( float x, float y, float twist )
     // Add gyro compensation (adjust the "200" for best PID response).
     // Also reverse the direction, since our drive base is a mirror
     // image of what RobotDrive3 expects.
-    twist = -( twist - m_gyro->GetRate() / 200. );
+    twist = -( twist / 1.5 + m_gyro->GetRate() / 200. );
 
     // limit the twist range to avoid normalization problems
     if (twist < -1.0) twist = -1.0;

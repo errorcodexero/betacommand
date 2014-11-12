@@ -1,0 +1,54 @@
+<xml version="1.0">
+<dashboard>
+	<widget field="StopShooter" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="276" y="0"/>
+	</widget>
+	<widget field="StopCollector" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="180" y="300"/>
+	</widget>
+	<widget field="StartCollector" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="16" y="300"/>
+	</widget>
+	<widget field="ReverseCollector" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="340" y="300"/>
+	</widget>
+	<widget field="RaiseInjector" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="20" y="227"/>
+	</widget>
+	<widget field="RaiseBridge" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="315" y="96"/>
+	</widget>
+	<widget field="PassMode" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="354" y="162"/>
+	</widget>
+	<widget field="OpenFingers" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="181" y="267"/>
+	</widget>
+	<widget field="LowerInjectorAndOpenFingers" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="736" y="403"/>
+	</widget>
+	<widget field="LowerInjector" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="175" y="227"/>
+	</widget>
+	<widget field="LowerBridge" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="0" y="170"/>
+	</widget>
+	<widget field="HoldMode" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="0" y="136"/>
+	</widget>
+	<widget field="DriveCommand" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="0" y="102"/>
+	</widget>
+	<widget field="CollectMode" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="0" y="68"/>
+	</widget>
+	<widget field="CloseFingers" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="21" y="267"/>
+	</widget>
+	<widget field="CatchMode" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
+		<location x="0" y="0"/>
+	</widget>
+</dashboard>
+<live-window>
+</live-window>
+</xml>

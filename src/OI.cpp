@@ -22,7 +22,8 @@ float OI::GetY()
 
 float OI::GetTwist()
 {
-    return driver->GetTwist();
+ // return driver->GetTwist();
+    return driver->GetRawAxis(4);
 }
 
 float OI::GetThrottle()

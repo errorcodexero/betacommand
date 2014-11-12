@@ -26,7 +26,7 @@ Shooter::Shooter( TwoMotor<CANJaguar> *bottomMotor, Tachometer *bottomTach,
     m_topSet = 0.;
 
     m_bottomSpeed = 0.;
-    m_topSet = 0.;
+    m_topSpeed = 0.;
 
     m_state = STOPPED;
 }
