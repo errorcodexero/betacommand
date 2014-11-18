@@ -3,11 +3,11 @@
 #pragma once
 #include <WPILib.h>
 
-class StopShooter : public Command
+class LowerKicker : public Command
 {
 public:
-    StopShooter();
-    virtual ~StopShooter();
+    LowerKicker();
+    virtual ~LowerKicker();
 
 protected:
     virtual void Initialize();

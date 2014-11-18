@@ -1,10 +1,7 @@
 // FIRST Team 1425 "Error Code Xero"
 // for FRC 2013 game "Ultimate Ascent"
-
+#pragma once
 #include<WPILib.h>
-
-#ifndef _TWOMOTOR_H_
-#define _TWOMOTOR_H_
 
 template <class MotorController>
 class TwoMotor : public SpeedController, public MotorSafety
@@ -73,5 +70,3 @@ public:
 	master->GetDescription(desc);
     };
 };
-
-#endif // _TWOMOTOR_H_

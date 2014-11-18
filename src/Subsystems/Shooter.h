@@ -1,18 +1,19 @@
+// FIRST Team 1425 "Error Code Xero"
+// for FRC 2013 game "Ultimate Ascent"
+#pragma once
 #include <WPILib.h>
 #include "../Components/Tachometer.h"
 #include "../Components/TwoMotor.h"
 
-#ifndef _SHOOTER_H_
-#define _SHOOTER_H_
-
-#define	minRPM		(250.)
-#define	maxRPM		(3800.)
+#define	kMinSet		(250.)
+#define	kMaxSet		(3800.)
+#define	kMinSpeed	(120.)
 #define	kStartSpeed	(800.)
 #define	kStartOut	(0.6)
-#define	kP		(1.0/maxRPM)
-#define	kI		(0.05/maxRPM)
+#define	kP		(1.0/kMaxSet)
+#define	kI		(0.05/kMaxSet)
 #define	kD		(0.0)
-#define	kF		(1.0/maxRPM)
+#define	kF		(1.0/kMaxSet)
 #define	kPeriod		(0.1)
 #define	kTolerance 	(0.03)
 
@@ -43,7 +44,7 @@ public:
 		 TwoMotor<CANJaguar> *topMotor, Tachometer *topTach );
 	~Shooter();
 
-	void Set( float bottomSpeed, float topSpeed );
+	void Set( float bottomSet, float topSet );
 
 	void Start();
 	void Stop();
@@ -51,6 +52,3 @@ public:
 	bool IsMoving();
 	bool IsUpToSpeed();
 };
-
-
-#endif // _SHOOTER_H_

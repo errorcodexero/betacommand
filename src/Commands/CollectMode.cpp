@@ -11,7 +11,6 @@ CollectMode::CollectMode() : CommandGroup("CollectMode")
     AddParallel(new LowerInjectorAndOpenFingers());
     AddSequential(new LowerBridge());
     AddSequential(new StartCollector());
-    AddSequential(new WaitForChildren(5.0));
 }
 
 CollectMode::~CollectMode()

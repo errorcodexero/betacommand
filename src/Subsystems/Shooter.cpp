@@ -13,20 +13,24 @@ Shooter::Shooter( TwoMotor<CANJaguar> *bottomMotor, Tachometer *bottomTach,
     m_bottomMotor = bottomMotor;
     m_bottomTach = bottomTach;
     m_bottomPID = new PIDController( m_P, m_I, m_D, m_F, bottomTach, bottomMotor, m_period );
-    m_bottomPID->SetInputRange( minRPM, maxRPM );
+    m_bottomPID->SetInputRange( kMinSet, kMaxSet );
     m_bottomPID->SetTolerance( kTolerance );
 
     m_topMotor = topMotor;
     m_topTach = topTach;
     m_topPID = new PIDController( m_P, m_I, m_D, m_F, topTach, topMotor, m_period );
-    m_topPID->SetInputRange( minRPM, maxRPM );
+    m_topPID->SetInputRange( kMinSet, kMaxSet );
     m_topPID->SetTolerance( kTolerance );
 
     m_bottomSet = 0.;
+    SmartDashboard::PutNumber("Bottom Set", m_bottomSet);
     m_topSet = 0.;
+    SmartDashboard::PutNumber("Top Set", m_topSet);
 
     m_bottomSpeed = 0.;
+    SmartDashboard::PutNumber("Bottom Speed", m_bottomSpeed);
     m_topSpeed = 0.;
+    SmartDashboard::PutNumber("Top Speed", m_topSpeed);
 
     m_state = STOPPED;
 }
@@ -43,7 +47,9 @@ Shooter::~Shooter()
 void Shooter::Set( float bottomSpeed, float topSpeed )
 {
     m_bottomSet = bottomSpeed;
+    SmartDashboard::PutNumber("Bottom Set", m_bottomSet);
     m_topSet = topSpeed;
+    SmartDashboard::PutNumber("Top Set", m_topSet);
 }
 
 void Shooter::Start()
@@ -69,8 +75,13 @@ void Shooter::Stop()
 
 void Shooter::Run()
 {
+    m_bottomSet = SmartDashboard::GetNumber("Bottom Set", m_bottomSet);
+    m_topSet = SmartDashboard::GetNumber("Top Set", m_topSet);
+
     m_bottomSpeed = m_bottomTach->PIDGet();
+    SmartDashboard::PutNumber("Bottom Speed", m_bottomSpeed);
     m_topSpeed = m_topTach->PIDGet();
+    SmartDashboard::PutNumber("Top Speed", m_topSpeed);
 
     switch (m_state) {
     case STOPPED:
@@ -113,6 +124,6 @@ bool Shooter::IsUpToSpeed()
 
 bool Shooter::IsMoving()
 {
-    return (m_bottomSpeed > 120.) || (m_topSpeed > 120.);
+    return (m_bottomSpeed > kMinSpeed) || (m_topSpeed > kMinSpeed);
 }
 

@@ -1,10 +1,7 @@
 // FIRST Team 1425 "Error Code Xero"
 // for FRC 2013 game "Ultimate Ascent"
-
-#ifndef DRIVEBASE_H
-#define DRIVEBASE_H
-
-#include "WPILib.h"
+#pragma once
+#include <WPILib.h>
 #include "../Components/RateGyro.h"
 #include "../Components/RobotDrive3.h"
 #include "../Commands/DriveCommand.h"
@@ -36,5 +33,3 @@ public:
 	void Start();
 	void Drive3( float x, float y, float twist );
 };
-
-#endif

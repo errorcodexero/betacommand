@@ -1,9 +1,6 @@
 // FIRST Team 1425 "Error Code Xero"
 // for FRC 2013 game "Ultimate Ascent"
-
-#ifndef _TRIPLE_SOLENOID_H_
-#define _TRIPLE_SOLENOID_H_
-
+#pragma once
 #include "DoubleSolenoid.h"
 
 class TripleSolenoid : public DoubleSolenoid {
@@ -40,5 +37,3 @@ private:
     static const double kPollInterval;
     static const double kTravelTime;
 };
-
-#endif

@@ -1,9 +1,6 @@
 // FIRST Team 1425 "Error Code Xero"
 // for FRC 2013 game "Ultimate Ascent"
-
-#ifndef _DRIVECOMMAND_H_
-#define _DRIVECOMMAND_H_
-
+#pragma once
 #include <WPILib.h>
 
 // This is the default command for the drive base:
@@ -18,5 +15,3 @@ public:
     virtual void End();
     virtual void Interrupted();
 };
-
-#endif // _DRIVECOMMAND_H_

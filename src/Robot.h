@@ -1,9 +1,6 @@
 // FIRST Team 1425 "Error Code Xero"
 // for FRC 2014 post-season "Aerial Assist"
-
-#ifndef _ROBOT_H_
-#define _ROBOT_H_
-
+#pragma once
 #include <WPILib.h>
 #include "OI.h"
 #include "Components/TwoMotor.h"
@@ -15,21 +12,26 @@
 #include "Subsystems/Shooter.h"
 #include "Commands/CatchMode.h"
 #include "Commands/CloseFingers.h"
+#include "Commands/CloseFingersAndRaiseInjector.h"
 #include "Commands/CollectMode.h"
 #include "Commands/DriveCommand.h"
 #include "Commands/HoldMode.h"
 #include "Commands/LowerBridge.h"
 #include "Commands/LowerInjector.h"
 #include "Commands/LowerInjectorAndOpenFingers.h"
+#include "Commands/LowerKicker.h"
 #include "Commands/OpenFingers.h"
-#include "Commands/PassMode.h"
+#include "Commands/PassBall.h"
 #include "Commands/RaiseBridge.h"
 #include "Commands/RaiseInjector.h"
+#include "Commands/RaiseKicker.h"
 #include "Commands/ReverseCollector.h"
+#include "Commands/ShootBall.h"
 #include "Commands/StartCollector.h"
+#include "Commands/StartShooter.h"
 #include "Commands/StopCollector.h"
 #include "Commands/StopShooter.h"
-#include "Commands/TimedDrive.h"
+#include "Commands/AutoCommand.h"
 
 class Robot: public IterativeRobot
 {
@@ -44,11 +46,11 @@ public:
 	static RateGyro* gyro;
 	static DriveBase* driveBase;
 
-	static SlowDoubleSolenoid* bridge;
 	static Victor* collector;
+	static SlowDoubleSolenoid* bridge;
 	static SlowDoubleSolenoid* injector1;
 	static SlowDoubleSolenoid* injector2;
-	static SlowSolenoid* ejector;
+	static SlowSolenoid* kicker;
 	static SlowSolenoid* fingers;
 	static CANJaguar* bottomMotor1;
 	static CANJaguar* bottomMotor2;
@@ -60,25 +62,28 @@ public:
 	static Tachometer* topTach;
 	static Shooter* shooter;
 
-	static CatchMode* catchMode;
-	static CloseFingers* closeFingers;
-	static CollectMode* collectMode;
-	static DriveCommand* driveCommand;
-	static HoldMode* holdMode;
-	static LowerBridge* lowerBridge;
-	static LowerInjector* lowerInjector;
-	static LowerInjectorAndOpenFingers* lowerInjectorAndOpenFingers;
-	static OpenFingers* openFingers;
-	static PassMode* passMode;
-	static RaiseBridge* raiseBridge;
-	static RaiseInjector* raiseInjector;
-	static ReverseCollector* reverseCollector;
-	static StartCollector* startCollector;
-	static StopCollector* stopCollector;
-	static StopShooter* stopShooter;
-	// static TimedDrive* timedDrive;
-
-	static Command *autonomousCommand;
+	static Command* catchMode;
+	static Command* closeFingers;
+	static Command* closeFingersAndRaiseInjector;
+	static Command* collectMode;
+	static Command* driveCommand;
+	static Command* holdMode;
+	static Command* lowerBridge;
+	static Command* lowerInjector;
+	static Command* lowerInjectorAndOpenFingers;
+	static Command* lowerKicker;
+	static Command* openFingers;
+	static Command* passBall;
+	static Command* raiseBridge;
+	static Command* raiseInjector;
+	static Command* raiseKicker;
+	static Command* reverseCollector;
+	static Command* shootBall;
+	static Command* startCollector;
+	static Command* startShooter;
+	static Command* stopCollector;
+	static Command* stopShooter;
+	static Command *autoCommand;
 
 private:
 	void RobotInit();
@@ -88,5 +93,3 @@ private:
 	void TeleopPeriodic();
 	void TestPeriodic();
 };
-
-#endif // _ROBOT_H_

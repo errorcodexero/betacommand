@@ -7,7 +7,6 @@
 LowerInjectorAndOpenFingers::LowerInjectorAndOpenFingers() :
     CommandGroup("LowerInjectorAndOpenFingers")
 {
-    AddSequential(new CloseFingers());
     AddSequential(new LowerInjector());
     AddSequential(new OpenFingers());
 }

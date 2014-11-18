@@ -3,9 +3,9 @@
 #pragma once
 #include <WPILib.h>
 
-class HoldMode : public CommandGroup
+class AutoCommand : public CommandGroup
 {
 public:
-    HoldMode();
-    virtual ~HoldMode();
+    AutoCommand();
+    virtual ~AutoCommand();
 };

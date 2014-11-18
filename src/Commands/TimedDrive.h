@@ -1,9 +1,6 @@
 // FIRST Team 1425 "Error Code Xero"
 // for FRC 2013 game "Ultimate Ascent"
-
-#ifndef TIMED_DRIVE_H
-#define TIMED_DRIVE_H
-
+#pragma once
 #include <WPILib.h>
 
 class TimedDrive: public Command {
@@ -21,5 +18,3 @@ public:
     virtual void End();
     virtual void Interrupted();
 };
-
-#endif // _TIMED_DRIVE_H_

@@ -1,17 +1,14 @@
 // FIRST Team 1425 "Error Code Xero"
 // for FRC 2014 post-season "Aerial Assist"
-
+#pragma once
 #include <WPILib.h>
 #include <OSAL/Synchronized.h>
 #include <OSAL/Task.h>
 
-#ifndef _TACHOMETER_H_
-#define _TACHOMETER_H_
-
 // The Tachometer determines wheel speed by measuring the interval
 // between rising edges of the Hall effect sensor output.
 
-class Tachometer : public SensorBase, public PIDSource, public LiveWindowSendable
+class Tachometer : public PIDSource, public LiveWindowSendable
 {
 public:
     Tachometer( uint32_t channel );
@@ -31,8 +28,8 @@ public:
     virtual void UpdateTable();
 
 private:
-    ITable* table;
     DigitalInput sensor;
+    ITable* table;
     NTReentrantSemaphore tachSem;
 
     uint32_t lastTime;
@@ -43,6 +40,3 @@ private:
     static void InterruptHandler( uint32_t mask, void *param );
     void HandleInterrupt( void );
 };
-
-#endif // _TACHOMETER_H_
-

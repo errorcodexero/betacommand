@@ -1,9 +1,6 @@
 // FIRST Team 1425 "Error Code Xero"
 // for FRC 2013 game "Ultimate Ascent"
-
-#ifndef RATEGYRO_H
-#define RATEGYRO_H
-
+#pragma once
 #include "WPILib.h"
 
 // turn-rate gyro connected to an analog input channel
@@ -21,5 +18,3 @@ public:
 private:
 	void InitChannel();
 };
-
-#endif

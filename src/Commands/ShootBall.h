@@ -3,9 +3,9 @@
 #pragma once
 #include <WPILib.h>
 
-class HoldMode : public CommandGroup
+class ShootBall : public CommandGroup
 {
 public:
-    HoldMode();
-    virtual ~HoldMode();
+    ShootBall();
+    virtual ~ShootBall();
 };

@@ -1,10 +1,7 @@
 // FIRST Team 1425 "Error Code Xero"
 // for FRC 2014 post-season "Aerial Assist"
-
+#pragma once
 #include <WPILib.h>
-
-#ifndef _SLOW_SOLENOID_H_
-#define _SLOW_SOLENOID_H_
 
 class SlowSolenoid : public Solenoid
 {
@@ -55,6 +52,3 @@ private:
 
 	void UpdatePosition();
 };
-
-#endif // _SLOW_SOLENOID_H_
-

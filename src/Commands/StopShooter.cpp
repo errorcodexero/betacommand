@@ -4,7 +4,10 @@
 
 StopShooter::StopShooter() : Command("StopShooter") { }
 
-StopShooter::~StopShooter() { }
+StopShooter::~StopShooter()
+{
+    Requires(Robot::shooter);
+}
 
 void StopShooter::Initialize()
 {

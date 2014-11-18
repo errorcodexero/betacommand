@@ -1,12 +1,9 @@
 // FIRST Team 1425 "Error Code Xero"
 // for FRC 2013 game "Ultimate Ascent"
-
-#ifndef ROBOTDRIVE3_H_
-#define ROBOTDRIVE3_H_
-
-#include "wpilib.h"
-#include "ErrorBase.h"
-#include "RobotDrive.h"
+#pragma once
+#include <WPILib.h>
+#include <ErrorBase.h>
+#include <RobotDrive.h>
 
 class SpeedController;
 
@@ -28,6 +25,3 @@ private:
     double m_lastSpeeds[kMaxNumberOfMotors];
     DISALLOW_COPY_AND_ASSIGN(RobotDrive3);
 };
-
-#endif
-

@@ -16,11 +16,11 @@ RateGyro* Robot::gyro = NULL;
 
 DriveBase* Robot::driveBase = NULL;
 
-SlowDoubleSolenoid* Robot::bridge = NULL;
 Victor* Robot::collector = NULL;
+SlowDoubleSolenoid* Robot::bridge = NULL;
 SlowDoubleSolenoid* Robot::injector1 = NULL;
 SlowDoubleSolenoid* Robot::injector2 = NULL;
-SlowSolenoid* Robot::ejector = NULL;
+SlowSolenoid* Robot::kicker = NULL;
 SlowSolenoid* Robot::fingers = NULL;
 
 CANJaguar* Robot::bottomMotor1 = NULL;
@@ -40,24 +40,28 @@ Shooter* Robot::shooter = NULL;
 OI* Robot::oi = NULL;
 
 // Initialize a single static instance of your commands to NULL
-CatchMode* Robot::catchMode = NULL;
-CloseFingers* Robot::closeFingers = NULL;
-CollectMode* Robot::collectMode = NULL;
-DriveCommand* Robot::driveCommand = NULL;
-HoldMode* Robot::holdMode = NULL;
-LowerBridge* Robot::lowerBridge = NULL;
-LowerInjector* Robot::lowerInjector = NULL;
-LowerInjectorAndOpenFingers* Robot::lowerInjectorAndOpenFingers = NULL;
-OpenFingers* Robot::openFingers = NULL;
-PassMode* Robot::passMode = NULL;
-RaiseBridge* Robot::raiseBridge = NULL;
-RaiseInjector* Robot::raiseInjector = NULL;
-ReverseCollector* Robot::reverseCollector = NULL;
-StartCollector* Robot::startCollector = NULL;
-StopCollector* Robot::stopCollector = NULL;
-StopShooter* Robot::stopShooter = NULL;
-// TimedDrive* Robot::timedDrive = NULL;
-Command* Robot::autonomousCommand = NULL;
+Command* Robot::catchMode = NULL;
+Command* Robot::closeFingers = NULL;
+Command* Robot::closeFingersAndRaiseInjector = NULL;
+Command* Robot::collectMode = NULL;
+Command* Robot::driveCommand = NULL;
+Command* Robot::holdMode = NULL;
+Command* Robot::lowerBridge = NULL;
+Command* Robot::lowerInjector = NULL;
+Command* Robot::lowerInjectorAndOpenFingers = NULL;
+Command* Robot::lowerKicker = NULL;
+Command* Robot::openFingers = NULL;
+Command* Robot::passBall = NULL;
+Command* Robot::raiseBridge = NULL;
+Command* Robot::raiseInjector = NULL;
+Command* Robot::raiseKicker = NULL;
+Command* Robot::reverseCollector = NULL;
+Command* Robot::shootBall = NULL;
+Command* Robot::startCollector = NULL;
+Command* Robot::startShooter = NULL;
+Command* Robot::stopCollector = NULL;
+Command* Robot::stopShooter = NULL;
+Command* Robot::autoCommand = NULL;
 
 // Define where all the components are connected
 static constexpr int PWM_LEFT  = 0;
@@ -81,7 +85,7 @@ static constexpr int SOL_INJECTOR_DOWN_1 = 2;
 static constexpr int SOL_INJECTOR_DOWN_2 = 3;	// dummy
 static constexpr int SOL_INJECTOR_UP_1 = 4;
 static constexpr int SOL_INJECTOR_UP_2 = 5;
-static constexpr int SOL_EJECTOR = 6;
+static constexpr int SOL_KICKER = 6;
 static constexpr int SOL_FINGERS = 7;
 
 void Robot::RobotInit()
@@ -115,10 +119,10 @@ void Robot::RobotInit()
     injector2 = new SlowDoubleSolenoid(SOL_INJECTOR_UP_2, SOL_INJECTOR_DOWN_2, 0.75, 1.8, DoubleSolenoid::kReverse);
     lw->AddActuator("Injector", "Injector2", injector2);
 
-    ejector = new SlowSolenoid(SOL_EJECTOR, 0.2, 0.2, false);
-    lw->AddActuator("Ejector", "Ejector", ejector);
+    kicker = new SlowSolenoid(SOL_KICKER, 0.2, 0.2, false);
+    lw->AddActuator("Collector", "Kicker", kicker);
 
-    fingers = new SlowSolenoid(SOL_FINGERS, 0.2, 0.2, true);
+    fingers = new SlowSolenoid(SOL_FINGERS, 0.2, 0.2, false);
     lw->AddActuator("Injector", "Fingers", fingers);
 
     bottomMotor1 = new CANJaguar(CAN_BOTTOM1);
@@ -144,6 +148,7 @@ void Robot::RobotInit()
     lw->AddSensor("TopWheel", "Tach", topTach);
 
     shooter = new Shooter(bottomMotors, bottomTach, topMotors, topTach);
+    shooter->Set( 2500., 1400. );
 
     oi = new OI();
 
@@ -152,6 +157,9 @@ void Robot::RobotInit()
 
     closeFingers = new CloseFingers();
     SmartDashboard::PutData("CloseFingers", closeFingers);
+
+    closeFingersAndRaiseInjector = new CloseFingersAndRaiseInjector();
+    SmartDashboard::PutData("CloseFingersAndRaiseInjector", closeFingersAndRaiseInjector);
 
     collectMode = new CollectMode();
     SmartDashboard::PutData("CollectMode", collectMode);
@@ -171,11 +179,14 @@ void Robot::RobotInit()
     lowerInjectorAndOpenFingers = new LowerInjectorAndOpenFingers();
     SmartDashboard::PutData("LowerInjectorAndOpenFingers", lowerInjectorAndOpenFingers);
 
+    lowerKicker = new LowerKicker();
+    SmartDashboard::PutData("LowerKicker", lowerKicker);
+
     openFingers = new OpenFingers();
     SmartDashboard::PutData("OpenFingers", openFingers);
 
-    passMode = new PassMode();
-    SmartDashboard::PutData("PassMode", passMode);
+    passBall = new PassBall();
+    SmartDashboard::PutData("PassBall", passBall);
 
     raiseBridge = new RaiseBridge();
     SmartDashboard::PutData("RaiseBridge", raiseBridge);
@@ -183,11 +194,20 @@ void Robot::RobotInit()
     raiseInjector = new RaiseInjector();
     SmartDashboard::PutData("RaiseInjector", raiseInjector);
 
+    raiseKicker = new RaiseKicker();
+    SmartDashboard::PutData("RaiseKicker", raiseKicker);
+
     reverseCollector = new ReverseCollector();
     SmartDashboard::PutData("ReverseCollector", reverseCollector);
 
+    shootBall = new ShootBall();
+    SmartDashboard::PutData("ShootBall", shootBall);
+
     startCollector = new StartCollector();
     SmartDashboard::PutData("StartCollector", startCollector);
+
+    startShooter = new StartShooter();
+    SmartDashboard::PutData("StartShooter", startShooter);
 
     stopCollector = new StopCollector();
     SmartDashboard::PutData("StopCollector", stopCollector);
@@ -195,15 +215,13 @@ void Robot::RobotInit()
     stopShooter = new StopShooter();
     SmartDashboard::PutData("StopShooter", stopShooter);
 
-    // timedDrive = new TimedDrive();
-    // SmartDashboard::PutData("TimedDrive", timedDrive);
-
-    // autonomousCommand = new AutoCommand();
+    autoCommand = new AutoCommand();
+    // SmartDashboard::PutData("AutoCommand", autoCommand);
 }
 
 void Robot::AutonomousInit()
 {
-    if (autonomousCommand) autonomousCommand->Start();
+    if (autoCommand) autoCommand->Start();
 }
 
 void Robot::AutonomousPeriodic()
@@ -217,7 +235,7 @@ void Robot::TeleopInit()
     // teleop starts running. If you want the autonomous to 
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (autonomousCommand) autonomousCommand->Cancel();
+    if (autoCommand) autoCommand->Cancel();
 }
 
 void Robot::TeleopPeriodic()

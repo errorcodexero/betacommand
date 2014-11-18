@@ -1,12 +1,16 @@
-#ifndef OI_H
-#define OI_H
-
+// FIRST Team 1425 "Error Code Xero"
+// for FRC 2014 post-season "Aerial Assist"
+#pragma once
 #include "WPILib.h"
 
 class OI
 {
 private:
 	Joystick *driver;
+	JoystickButton *buttonA;
+	JoystickButton *buttonB;
+	JoystickButton *buttonX;
+	JoystickButton *buttonY;
 
 public:
 	OI();
@@ -16,5 +20,3 @@ public:
 	float GetTwist();
 	float GetThrottle();
 };
-
-#endif

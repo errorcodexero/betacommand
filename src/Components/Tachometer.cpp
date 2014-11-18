@@ -5,19 +5,23 @@
 #include <OSAL/Synchronized.h>
 #include <OSAL/Task.h>
 #include "Tachometer.h"
+#include <ostream>
+#include <cstdio>
+
+using namespace std;
 
 Tachometer::Tachometer( uint32_t channel ) :
-    SensorBase(),
     PIDSource(),
     LiveWindowSendable(),
-    table(NULL),
     sensor(channel),
+    table(NULL),
     lastTime(0),
     lastInterval(0),
     sampleValid(false),
     intervalValid(false)
 {
     sensor.RequestInterrupts( Tachometer::InterruptHandler, this );
+    sensor.SetUpSourceEdge(true, false);
     sensor.EnableInterrupts();
 }
 
@@ -42,7 +46,7 @@ Tachometer::HandleInterrupt()
     uint32_t when = (uint32_t) (sensor.ReadRisingTimestamp() * 1e6 + 0.5);
 
     {
-	NTSynchronized LOCK(tachSem);
+	NTSynchronized lock(tachSem);
 
 	if (sampleValid) {
 	    uint32_t interval = when - lastTime;
@@ -60,7 +64,7 @@ Tachometer::HandleInterrupt()
 uint32_t
 Tachometer::GetInterval()
 {
-    NTSynchronized LOCK(tachSem);
+    NTSynchronized lock(tachSem);
 
     if (intervalValid) {
 	// check if interval is _still_ valid
@@ -81,7 +85,7 @@ Tachometer::PIDGet()
 {
     uint32_t interval = GetInterval();
     if (interval) {
-	return 60.e-6 / interval;
+	return 60.e6 / interval;
     } else {
 	return 0.;
     }
