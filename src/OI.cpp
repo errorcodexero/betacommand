@@ -26,6 +26,12 @@ OI::OI()
 
 OI::~OI()
 {
+    delete rightButton;
+    delete leftButton;
+    delete buttonY;
+    delete buttonX;
+    delete buttonB;
+    delete buttonA;
     delete driver;
 }
 
