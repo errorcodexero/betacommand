@@ -3,6 +3,8 @@
 #include "Commands/PassBall.h"
 #include "Commands/CatchMode.h"
 #include "Commands/CollectMode.h"
+#include "Commands/StopShooter.h"
+#include "Commands/ShootBall.h"
 
 OI::OI()
 {
@@ -11,11 +13,15 @@ OI::OI()
     buttonB = new JoystickButton(driver, 1);
     buttonX = new JoystickButton(driver, 2);
     buttonY = new JoystickButton(driver, 3);
+    leftButton = new JoystickButton(driver, 4);
+    rightButton = new JoystickButton(driver, 5);
 
     buttonA->WhenPressed(new HoldMode());
     buttonB->WhenPressed(new PassBall());
-    buttonX->WhenPressed(new CatchMode());
-    buttonY->WhenPressed(new CollectMode());
+    buttonX->WhenPressed(new CollectMode());
+    buttonY->WhenPressed(new CatchMode());
+    leftButton->WhenPressed(new StopShooter());
+    rightButton->WhenPressed(new ShootBall());
 }
 
 OI::~OI()

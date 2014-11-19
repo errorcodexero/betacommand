@@ -21,7 +21,8 @@ void StopShooter::Execute()
 
 bool StopShooter::IsFinished()
 {
-    return !(Robot::shooter && Robot::shooter->IsMoving());
+    // return !(Robot::shooter && Robot::shooter->IsMoving());
+    return true;
 }
 
 void StopShooter::End()

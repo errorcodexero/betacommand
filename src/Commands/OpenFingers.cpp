@@ -8,7 +8,7 @@ OpenFingers::~OpenFingers() { }
 
 void OpenFingers::Initialize()
 {
-    if (Robot::fingers) Robot::fingers->Set(false);
+    if (Robot::fingers) Robot::fingers->Set(true);
 }
 
 void OpenFingers::Execute()

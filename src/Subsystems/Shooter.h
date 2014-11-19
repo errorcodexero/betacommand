@@ -5,18 +5,6 @@
 #include "../Components/Tachometer.h"
 #include "../Components/TwoMotor.h"
 
-#define	kMinSet		(250.)
-#define	kMaxSet		(3800.)
-#define	kMinSpeed	(120.)
-#define	kStartSpeed	(800.)
-#define	kStartOut	(0.6)
-#define	kP		(1.0/kMaxSet)
-#define	kI		(0.05/kMaxSet)
-#define	kD		(0.0)
-#define	kF		(1.0/kMaxSet)
-#define	kPeriod		(0.1)
-#define	kTolerance 	(0.03)
-
 class Shooter : public Subsystem
 {
 private:

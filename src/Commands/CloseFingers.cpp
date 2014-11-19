@@ -8,7 +8,7 @@ CloseFingers::~CloseFingers() { }
 
 void CloseFingers::Initialize()
 {
-    if (Robot::fingers) Robot::fingers->Set(true);
+    if (Robot::fingers) Robot::fingers->Set(false);
 }
 
 void CloseFingers::Execute()

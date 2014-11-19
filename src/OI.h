@@ -11,6 +11,8 @@ private:
 	JoystickButton *buttonB;
 	JoystickButton *buttonX;
 	JoystickButton *buttonY;
+	JoystickButton *leftButton;
+	JoystickButton *rightButton;
 
 public:
 	OI();

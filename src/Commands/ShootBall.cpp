@@ -1,6 +1,7 @@
 #include "ShootBall.h"
 #include "CloseFingers.h"
 #include "LowerInjector.h"
+#include "LowerInjectorAndOpenFingers.h"
 #include "RaiseInjector.h"
 #include "LowerBridge.h"
 #include "RaiseBridge.h"
@@ -16,7 +17,7 @@ ShootBall::ShootBall() : CommandGroup("ShootBall")
     AddParallel(new RaiseBridge());
     AddSequential(new CloseFingers());
     AddSequential(new LowerInjector());
-    AddSequential(new WaitForChildren(5.0));
+    AddSequential(new WaitForChildren(6.0));
 
     // start wheels, wait for spin up
     AddSequential(new StartShooter());
@@ -25,8 +26,8 @@ ShootBall::ShootBall() : CommandGroup("ShootBall")
     AddSequential(new RaiseInjector());
 
     // stop wheels, return to catch or collect configuration
-    AddParallel(new LowerInjector());
-    AddSequential(new StopShooter());
+    AddParallel(new StopShooter());
+    AddParallel(new LowerInjectorAndOpenFingers());
     AddSequential(new LowerBridge());
 }
 
