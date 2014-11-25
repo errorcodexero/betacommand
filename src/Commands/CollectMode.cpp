@@ -8,9 +8,9 @@
 CollectMode::CollectMode() : CommandGroup("CollectMode")
 {
     AddParallel(new StopShooter());
-    AddParallel(new LowerInjectorAndOpenFingers());
-    AddSequential(new LowerBridge());
+    AddSequential(new LowerInjectorAndOpenFingers());
     AddSequential(new StartCollector());
+    AddSequential(new LowerBridge());
 }
 
 CollectMode::~CollectMode()

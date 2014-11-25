@@ -9,12 +9,12 @@
 OI::OI()
 {
     driver = new Joystick(0);
-    buttonA = new JoystickButton(driver, 0);
-    buttonB = new JoystickButton(driver, 1);
-    buttonX = new JoystickButton(driver, 2);
-    buttonY = new JoystickButton(driver, 3);
-    leftButton = new JoystickButton(driver, 4);
-    rightButton = new JoystickButton(driver, 5);
+    buttonA = new JoystickButton(driver, 1);
+    buttonB = new JoystickButton(driver, 2);
+    buttonX = new JoystickButton(driver, 3);
+    buttonY = new JoystickButton(driver, 4);
+    leftButton = new JoystickButton(driver, 5);
+    rightButton = new JoystickButton(driver, 6);
 
     buttonA->WhenPressed(new HoldMode());
     buttonB->WhenPressed(new PassBall());

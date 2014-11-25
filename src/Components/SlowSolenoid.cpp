@@ -53,7 +53,7 @@ void SlowSolenoid::Set( bool on )
     m_startTime = GetFPGATime();
     m_direction = on;
     m_moving = true;
-    cout << "SlowSolenoid::Set(" << on << ") from " << m_position << " at " << m_startTime << endl << flush;
+    // cout << "SlowSolenoid::Set(" << on << ") from " << m_position << " at " << m_startTime << endl << flush;
 }
 
 bool SlowSolenoid::Get()
@@ -86,7 +86,7 @@ void SlowSolenoid::UpdatePosition()
 	    if (newPosition > 1.0) {
 		newPosition = 1.0;
 		m_moving = false;
-		cout << "SlowSolenoid stopped at " << newPosition << " at " << now << endl << flush;
+		// cout << "SlowSolenoid stopped at " << newPosition << " at " << now << endl << flush;
 	    }
 	} else {
 	    // retracting
@@ -94,7 +94,7 @@ void SlowSolenoid::UpdatePosition()
 	    if (newPosition < 0.0) {
 		newPosition = 0.0;
 		m_moving = false;
-		cout << "SlowSolenoid stopped at " << newPosition << " at " << now << endl << flush;
+		// cout << "SlowSolenoid stopped at " << newPosition << " at " << now << endl << flush;
 	    }
 	}
 	m_position = newPosition;
