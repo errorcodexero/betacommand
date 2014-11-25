@@ -23,19 +23,19 @@ SlowDoubleSolenoid* Robot::injector2 = NULL;
 SlowSolenoid* Robot::kicker = NULL;
 SlowSolenoid* Robot::fingers = NULL;
 
-CANJaguar* Robot::bottomMotor1 = NULL;
-CANJaguar* Robot::bottomMotor2 = NULL;
-TwoMotor<CANJaguar>* Robot::bottomMotors = NULL;
+InstrumentedJaguar* Robot::bottomMotor1 = NULL;
+InstrumentedJaguar* Robot::bottomMotor2 = NULL;
+TwoMotor<InstrumentedJaguar>* Robot::bottomMotors = NULL;
 
 Tachometer* Robot::bottomTach = NULL;
 
-CANJaguar* Robot::topMotor1 = NULL;
-CANJaguar* Robot::topMotor2 = NULL;
-TwoMotor<CANJaguar>* Robot::topMotors = NULL;
+InstrumentedJaguar* Robot::topMotor1 = NULL;
+InstrumentedJaguar* Robot::topMotor2 = NULL;
+TwoMotor<InstrumentedJaguar>* Robot::topMotors = NULL;
 
 Tachometer* Robot::topTach = NULL;
 
-Shooter* Robot::shooter = NULL;
+Shooter<TwoMotor<InstrumentedJaguar>>* Robot::shooter = NULL;
 
 OI* Robot::oi = NULL;
 
@@ -125,29 +125,29 @@ void Robot::RobotInit()
     fingers = new SlowSolenoid(SOL_FINGERS, 0.2, 0.2, false);
     lw->AddActuator("Injector", "Fingers", fingers);
 
-    bottomMotor1 = new CANJaguar(CAN_BOTTOM1);
+    bottomMotor1 = new InstrumentedJaguar(CAN_BOTTOM1);
     lw->AddActuator("BottomWheel", "Motor1", bottomMotor1);
 
-    bottomMotor2 = new CANJaguar(CAN_BOTTOM2);
+    bottomMotor2 = new InstrumentedJaguar(CAN_BOTTOM2);
     lw->AddActuator("BottomWheel", "Motor2", bottomMotor2);
 
-    bottomMotors = new TwoMotor<CANJaguar>(bottomMotor1, bottomMotor2);
+    bottomMotors = new TwoMotor<InstrumentedJaguar>(bottomMotor1, bottomMotor2);
 
     bottomTach = new Tachometer(DIN_BOTTOM);
     lw->AddSensor("BottomWheel", "Tach", bottomTach);
 
-    topMotor1 = new CANJaguar(CAN_TOP1);
+    topMotor1 = new InstrumentedJaguar(CAN_TOP1);
     lw->AddActuator("TopWheel", "Motor1", topMotor1);
 
-    topMotor2 = new CANJaguar(CAN_TOP2);
+    topMotor2 = new InstrumentedJaguar(CAN_TOP2);
     lw->AddActuator("TopWheel", "Motor2", topMotor2);
 
-    topMotors = new TwoMotor<CANJaguar>(topMotor1, topMotor2);
+    topMotors = new TwoMotor<InstrumentedJaguar>(topMotor1, topMotor2);
 
     topTach = new Tachometer(DIN_TOP);
     lw->AddSensor("TopWheel", "Tach", topTach);
 
-    shooter = new Shooter(bottomMotors, bottomTach, topMotors, topTach);
+    shooter = new Shooter<TwoMotor<InstrumentedJaguar>>(bottomMotors, bottomTach, topMotors, topTach);
     shooter->Set( 2500., 1400. );
 
     oi = new OI();

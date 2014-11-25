@@ -3,6 +3,7 @@
 #pragma once
 #include <WPILib.h>
 #include "OI.h"
+#include "Components/InstrumentedJaguar.h"
 #include "Components/TwoMotor.h"
 #include "Components/RateGyro.h"
 #include "Components/SlowSolenoid.h"
@@ -52,15 +53,15 @@ public:
 	static SlowDoubleSolenoid* injector2;
 	static SlowSolenoid* kicker;
 	static SlowSolenoid* fingers;
-	static CANJaguar* bottomMotor1;
-	static CANJaguar* bottomMotor2;
-	static TwoMotor<CANJaguar>* bottomMotors;
+	static InstrumentedJaguar* bottomMotor1;
+	static InstrumentedJaguar* bottomMotor2;
+	static TwoMotor<InstrumentedJaguar>* bottomMotors;
 	static Tachometer* bottomTach;
-	static CANJaguar* topMotor1;
-	static CANJaguar* topMotor2;
-	static TwoMotor<CANJaguar>* topMotors;
+	static InstrumentedJaguar* topMotor1;
+	static InstrumentedJaguar* topMotor2;
+	static TwoMotor<InstrumentedJaguar>* topMotors;
 	static Tachometer* topTach;
-	static Shooter* shooter;
+	static Shooter<TwoMotor<InstrumentedJaguar>>* shooter;
 
 	static Command* catchMode;
 	static Command* closeFingers;
