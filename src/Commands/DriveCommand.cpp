@@ -32,10 +32,10 @@ void DriveCommand::Execute()
 //  }
 //  then = now;
 
-    float throttle = (1.0 - Robot::oi->GetThrottle())/2.0;
+    float throttle = 0.5 + Robot::oi->GetThrottle() / 2.0;
     float x = Robot::oi->GetX() * throttle;
     float y = Robot::oi->GetY() * throttle;
-    float t = Robot::oi->GetTwist();
+    float t = Robot::oi->GetTwist() / 2.0;
 //  printf("%g %g %g\n", x, y, t);
 
     Robot::driveBase->Drive3(x, y, t);

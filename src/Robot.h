@@ -61,7 +61,7 @@ public:
 	static InstrumentedJaguar* topMotor2;
 	static TwoMotor<InstrumentedJaguar>* topMotors;
 	static Tachometer* topTach;
-	static Shooter<TwoMotor<InstrumentedJaguar>>* shooter;
+	static Shooter* shooter;
 
 	static Command* catchMode;
 	static Command* closeFingers;
@@ -87,10 +87,13 @@ public:
 	static Command *autoCommand;
 
 private:
-	void RobotInit();
-	void AutonomousInit();
-	void AutonomousPeriodic();
-	void TeleopInit();
-	void TeleopPeriodic();
-	void TestPeriodic();
+	virtual void RobotInit();
+	virtual void AutonomousInit();
+	virtual void AutonomousPeriodic();
+	virtual void TeleopInit();
+	virtual void TeleopPeriodic();
+	virtual void TestInit();
+	virtual void TestPeriodic();
+	virtual void DisabledInit();
+	virtual void DisabledPeriodic();
 };

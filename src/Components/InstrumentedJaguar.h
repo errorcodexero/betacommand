@@ -8,6 +8,7 @@ class InstrumentedJaguar : public CANJaguar
 {
 private:
     std::string m_V, m_I;
+    Notifier *m_notifier;
 
 public:
     explicit InstrumentedJaguar( uint8_t deviceNumber );
@@ -22,4 +23,6 @@ public:
     virtual void PIDWrite(float output);
 
     void update();
+
+    static void timerEventHandler( void *param );
 };

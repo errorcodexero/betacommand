@@ -35,7 +35,7 @@ TwoMotor<InstrumentedJaguar>* Robot::topMotors = NULL;
 
 Tachometer* Robot::topTach = NULL;
 
-Shooter<TwoMotor<InstrumentedJaguar>>* Robot::shooter = NULL;
+Shooter* Robot::shooter = NULL;
 
 OI* Robot::oi = NULL;
 
@@ -147,7 +147,7 @@ void Robot::RobotInit()
     topTach = new Tachometer(DIN_TOP);
     lw->AddSensor("TopWheel", "Tach", topTach);
 
-    shooter = new Shooter<TwoMotor<InstrumentedJaguar>>(bottomMotors, bottomTach, topMotors, topTach);
+    shooter = new Shooter(bottomMotors, bottomTach, topMotors, topTach);
     shooter->Set( 2500., 1400. );
 
     oi = new OI();
@@ -243,9 +243,24 @@ void Robot::TeleopPeriodic()
     Scheduler::GetInstance()->Run();
 }
 
+void Robot::TestInit()
+{
+    ;
+}
+
 void Robot::TestPeriodic()
 {
     LiveWindow::GetInstance()->Run();
+}
+
+void Robot::DisabledInit()
+{
+    ;
+}
+
+void Robot::DisabledPeriodic()
+{
+    ;
 }
 
 START_ROBOT_CLASS(Robot);
