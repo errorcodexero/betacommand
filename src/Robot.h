@@ -96,4 +96,6 @@ private:
 	virtual void TestPeriodic();
 	virtual void DisabledInit();
 	virtual void DisabledPeriodic();
+
+	void ReportPower();
 };

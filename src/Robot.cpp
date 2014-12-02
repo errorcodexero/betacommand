@@ -90,6 +90,7 @@ static constexpr int SOL_FINGERS = 7;
 
 void Robot::RobotInit()
 {
+    oi = new OI();
     LiveWindow* lw = LiveWindow::GetInstance();
 
     compressor = new Compressor();
@@ -149,8 +150,6 @@ void Robot::RobotInit()
 
     shooter = new Shooter(bottomMotors, bottomTach, topMotors, topTach);
     shooter->Set( 2500., 1400. );
-
-    oi = new OI();
 
     catchMode = new CatchMode();
     SmartDashboard::PutData("CatchMode", catchMode);
@@ -227,6 +226,7 @@ void Robot::AutonomousInit()
 void Robot::AutonomousPeriodic()
 {
     Scheduler::GetInstance()->Run();
+    ReportPower();
 }
 
 void Robot::TeleopInit()
@@ -241,6 +241,7 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic()
 {
     Scheduler::GetInstance()->Run();
+    ReportPower();
 }
 
 void Robot::TestInit()
@@ -251,6 +252,7 @@ void Robot::TestInit()
 void Robot::TestPeriodic()
 {
     LiveWindow::GetInstance()->Run();
+    ReportPower();
 }
 
 void Robot::DisabledInit()
@@ -260,7 +262,20 @@ void Robot::DisabledInit()
 
 void Robot::DisabledPeriodic()
 {
-    ;
+    ReportPower();
+}
+
+void Robot::ReportPower()
+{
+    for (uint8_t chan = 0; chan < SensorBase::kPDPChannels; chan++) {
+	int status = 0;
+	double current = getPDPChannelCurrent(chan, &status);
+	if (!status) {
+	    char label[8];
+	    snprintf(label, sizeof label, "PDP I%02d", chan);
+	    SmartDashboard::PutNumber(label, current);
+	}
+    }
 }
 
 START_ROBOT_CLASS(Robot);
