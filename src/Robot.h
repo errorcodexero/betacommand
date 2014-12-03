@@ -2,7 +2,7 @@
 // for FRC 2014 post-season "Aerial Assist"
 #pragma once
 #include <WPILib.h>
-#include "OI.h"
+class OI; // #include "OI.h"
 #include "Components/InstrumentedJaguar.h"
 #include "Components/TwoMotor.h"
 #include "Components/RateGyro.h"
@@ -23,6 +23,7 @@
 #include "Commands/LowerKicker.h"
 #include "Commands/OpenFingers.h"
 #include "Commands/PassBall.h"
+#include "Commands/PrepareToShoot.h"
 #include "Commands/RaiseBridge.h"
 #include "Commands/RaiseInjector.h"
 #include "Commands/RaiseKicker.h"
@@ -31,6 +32,7 @@
 #include "Commands/StartCollector.h"
 #include "Commands/StartShooter.h"
 #include "Commands/StopCollector.h"
+#include "Commands/StopMotors.h"
 #include "Commands/StopShooter.h"
 #include "Commands/AutoCommand.h"
 
@@ -75,6 +77,7 @@ public:
 	static Command* lowerKicker;
 	static Command* openFingers;
 	static Command* passBall;
+	static Command* prepareToShoot;
 	static Command* raiseBridge;
 	static Command* raiseInjector;
 	static Command* raiseKicker;
@@ -83,8 +86,9 @@ public:
 	static Command* startCollector;
 	static Command* startShooter;
 	static Command* stopCollector;
+	static Command* stopMotors;
 	static Command* stopShooter;
-	static Command *autoCommand;
+	static Command* autoCommand;
 
 private:
 	virtual void RobotInit();

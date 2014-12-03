@@ -3,6 +3,7 @@
 
 #include <WPILib.h>
 #include <LiveWindow/LiveWindow.h>
+#include "OI.h"
 #include "Robot.h"
 
 // Initialize a single static instance of all of your (components and) subsystems to NULL
@@ -52,6 +53,7 @@ Command* Robot::lowerInjectorAndOpenFingers = NULL;
 Command* Robot::lowerKicker = NULL;
 Command* Robot::openFingers = NULL;
 Command* Robot::passBall = NULL;
+Command* Robot::prepareToShoot = NULL;
 Command* Robot::raiseBridge = NULL;
 Command* Robot::raiseInjector = NULL;
 Command* Robot::raiseKicker = NULL;
@@ -60,6 +62,7 @@ Command* Robot::shootBall = NULL;
 Command* Robot::startCollector = NULL;
 Command* Robot::startShooter = NULL;
 Command* Robot::stopCollector = NULL;
+Command* Robot::stopMotors = NULL;
 Command* Robot::stopShooter = NULL;
 Command* Robot::autoCommand = NULL;
 
@@ -187,6 +190,9 @@ void Robot::RobotInit()
     passBall = new PassBall();
     SmartDashboard::PutData("PassBall", passBall);
 
+    prepareToShoot = new PrepareToShoot();
+    SmartDashboard::PutData("PrepareToShoot", prepareToShoot);
+
     raiseBridge = new RaiseBridge();
     SmartDashboard::PutData("RaiseBridge", raiseBridge);
 
@@ -210,6 +216,9 @@ void Robot::RobotInit()
 
     stopCollector = new StopCollector();
     SmartDashboard::PutData("StopCollector", stopCollector);
+
+    stopMotors = new StopMotors();
+    SmartDashboard::PutData("StopMotors", stopMotors);
 
     stopShooter = new StopShooter();
     SmartDashboard::PutData("StopShooter", stopShooter);

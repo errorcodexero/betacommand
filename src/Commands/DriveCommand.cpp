@@ -2,6 +2,7 @@
 // for FRC 2013 game "Ultimate Ascent"
 
 #include <WPILib.h>
+#include "../OI.h"
 #include "../Robot.h"
 #include "DriveCommand.h"
 

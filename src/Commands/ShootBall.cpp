@@ -4,6 +4,7 @@
 #include "LowerInjectorAndOpenFingers.h"
 #include "RaiseInjector.h"
 #include "LowerBridge.h"
+#include "PrepareToShoot.h"
 #include "RaiseBridge.h"
 #include "StopCollector.h"
 #include "StartShooter.h"
@@ -12,15 +13,9 @@
 
 ShootBall::ShootBall() : CommandGroup("ShootBall")
 {
-    // start in hold configuration (all these should terminate immediately)
-    AddParallel(new StopCollector());
-    AddParallel(new RaiseBridge());
-    AddSequential(new CloseFingers());
-    AddSequential(new LowerInjector());
-    AddSequential(new WaitForChildren(6.0));
-
-    // start wheels, wait for spin up
-    AddSequential(new StartShooter());
+    // get into the right configuration, start wheels
+    // (if they're not already spinning)
+    AddSequential(new PrepareToShoot());
 
     // launch ball
     AddSequential(new RaiseInjector());
