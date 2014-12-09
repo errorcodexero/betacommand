@@ -7,93 +7,137 @@
 #include "Commands/ShootBall.h"
 #include "Commands/StopMotors.h"
 
+std::map<OI::ControlMode, OI::ControlMap> OI::driverControlMap = {
+    {
+	OI::kGamePad,
+	{
+	    {
+		{ OI::kXAxis,        0 },
+		{ OI::kYAxis,        1 },
+		{ OI::kThrottleAxis, 3 },
+		{ OI::kTwistAxis,    4 },
+	    },
+	    {
+		{ OI::kHoldModeButton,       1 },
+		{ OI::kPassBallButton,       2 },
+		{ OI::kCollectModeButton,    3 },
+		{ OI::kCatchModeButton,      4 },
+		{ OI::kPrepareToShootButton, 5 },
+		{ OI::kShootBallButton,      6 },
+	    }
+	}
+    },
+    {
+	OI::kFlightStick,
+	{
+	    {
+		{ OI::kXAxis,        0 },
+		{ OI::kYAxis,        1 },
+		{ OI::kThrottleAxis, 2 },
+		{ OI::kTwistAxis,    3 },
+	    },
+	    {
+		{ OI::kShootBallButton,      1 },
+		{ OI::kStopMotorsButton,     2 },
+		{ OI::kCollectModeButton,    3 },
+		{ OI::kCatchModeButton,      4 },
+		{ OI::kHoldModeButton,       5 },
+		{ OI::kPassBallButton,       6 },
+		{ OI::kPrepareToShootButton, 7 },
+	    },
+	}
+    },
+};
+
 OI::OI()
 {
-    driver = new Joystick(0);
+    stopMotorsButton     = new ControllerButton(this, kDriver, kStopMotorsButton);
+    stopMotorsButton->WhenPressed(new StopMotors());
 
-#ifdef GAMEPAD
-    buttonA = new JoystickButton(driver, 1);
-    buttonB = new JoystickButton(driver, 2);
-    buttonX = new JoystickButton(driver, 3);
-    buttonY = new JoystickButton(driver, 4);
-    leftButton = new JoystickButton(driver, 5);
-    rightButton = new JoystickButton(driver, 6);
+    holdModeButton       = new ControllerButton(this, kDriver, kHoldModeButton);
+    holdModeButton->WhenPressed(new HoldMode());
 
-    buttonA->WhenPressed(new HoldMode());
-    buttonB->WhileHeld(new PassBall());
-    buttonX->WhenPressed(new CollectMode());
-    buttonY->WhenPressed(new CatchMode());
-    leftButton->WhenPressed(new PrepareToShoot());
-    rightButton->WhenPressed(new ShootBall());
-#endif
+    catchModeButton      = new ControllerButton(this, kDriver, kCatchModeButton);
+    catchModeButton->WhenPressed(new CatchMode());
 
-#ifdef FLIGHTSTICK
-    button1 = new JoystickButton(driver, 1);	// trigger
-    button2 = new JoystickButton(driver, 2);
-    button3 = new JoystickButton(driver, 3);
-    button4 = new JoystickButton(driver, 4);
-    button5 = new JoystickButton(driver, 5);
-    button6 = new JoystickButton(driver, 6);
-    // button7 = new JoystickButton(driver, 7);
+    collectModeButton    = new ControllerButton(this, kDriver, kCollectModeButton);
+    collectModeButton->WhenPressed(new CollectMode());
 
-    button1->WhenPressed(new ShootBall());
-    button2->WhenPressed(new StopMotors());
-    button3->WhenPressed(new CollectMode());
-    button4->WhenPressed(new CatchMode());
-    button5->WhenPressed(new HoldMode());
-    button6->WhileHeld(new PassBall());
-    // button7->WhenPressed(new PrepareToShoot());
-#endif
+    passBallButton       = new ControllerButton(this, kDriver, kPassBallButton);
+    passBallButton->WhileHeld(new PassBall());
+
+    prepareToShootButton = new ControllerButton(this, kDriver, kPrepareToShootButton);
+    prepareToShootButton->WhenPressed(new PrepareToShoot());
+
+    shootBallButton      = new ControllerButton(this, kDriver, kShootBallButton);
+    shootBallButton->WhenPressed(new ShootBall());
 }
 
 OI::~OI()
 {
-#ifdef GAMEPAD
-    delete rightButton;
-    delete leftButton;
-    delete buttonY;
-    delete buttonX;
-    delete buttonB;
-    delete buttonA;
-#endif
-#ifdef FLIGHTSTICK
-    // delete button7;
-    delete button6;
-    delete button5;
-    delete button4;
-    delete button3;
-    delete button2;
-    delete button1;
-#endif
-    delete driver;
+    delete shootBallButton;
+    delete prepareToShootButton;
+    delete passBallButton;
+    delete collectModeButton;
+    delete catchModeButton;
+    delete holdModeButton;
+    delete stopMotorsButton;
+}
+
+OI::ControlMode OI::GetControllerType(int stick)
+{
+    return (DriverStation::GetInstance()->GetStickAxisCount(stick) >= 6)
+    		? kGamePad : kFlightStick;
 }
 
 float OI::GetX()
 {
-    return driver->GetX();
+    int axis = driverControlMap[GetControllerType(0)].axisMap[kXAxis];
+    return DriverStation::GetInstance()->GetStickAxis(0, axis);
 }
 
 float OI::GetY()
 {
-    return driver->GetY();
+    int axis = driverControlMap[GetControllerType(0)].axisMap[kYAxis];
+    return DriverStation::GetInstance()->GetStickAxis(0, axis);
 }
 
 float OI::GetTwist()
 {
-#ifdef GAMEPAD
-    return driver->GetRawAxis(4);
-#endif
-#ifdef FLIGHTSTICK
-    return driver->GetRawAxis(3);
-#endif
+    int axis = driverControlMap[GetControllerType(0)].axisMap[kTwistAxis];
+    return DriverStation::GetInstance()->GetStickAxis(0, axis);
 }
 
 float OI::GetThrottle()
 {
-#ifdef GAMEPAD
-    return driver->GetThrottle();
-#endif
-#ifdef FLIGHTSTICK
-    return (1.0 - driver->GetRawAxis(2)) / 2.;
-#endif
+    ControlMode mode = GetControllerType(0);
+    int axis = driverControlMap[mode].axisMap[kThrottleAxis];
+    float throttle = DriverStation::GetInstance()->GetStickAxis(0, axis);
+    // flight stick throttle ranges from 1.0 to -1.0;
+    // map it to 0.0 to 1.0 range to match game pad
+    if (mode == kFlightStick) {
+	throttle = (1.0 - throttle) / 2.;
+    }
+    return throttle;
 }
+
+float OI::GetControllerAxis(Controller controller, AxisFunction function)
+{
+    if (controller == kDriver) {
+	int axis = driverControlMap[GetControllerType(0)].axisMap[function];
+	return DriverStation::GetInstance()->GetStickAxis(0, axis);
+    } else {
+	return 0.0;
+    }
+}
+
+bool OI::GetControllerButton(Controller controller, ButtonFunction function)
+{
+    if (controller == kDriver) {
+	int button = driverControlMap[GetControllerType(0)].buttonMap[function];
+	return DriverStation::GetInstance()->GetStickButton(0, button);
+    } else {
+	return false;
+    }
+}
+
