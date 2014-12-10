@@ -152,7 +152,7 @@ void Robot::RobotInit()
     lw->AddSensor("TopWheel", "Tach", topTach);
 
     shooter = new Shooter(bottomMotors, bottomTach, topMotors, topTach);
-    shooter->Set( 2500., 1400. );
+    shooter->Set( 1800., 1200. );
 
     catchMode = new CatchMode();
     SmartDashboard::PutData("CatchMode", catchMode);

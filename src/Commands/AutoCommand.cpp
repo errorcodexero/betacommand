@@ -19,7 +19,7 @@ AutoCommand::AutoCommand() : CommandGroup("AutoCommand")
     AddSequential(new CollectMode());
 
     // drive in reverse to pick up ball
-    AddSequential(new TimedDrive(0.0, 0.2, 0.0, 1.8));
+    AddSequential(new TimedDrive(0.0, 0.4, 0.0, 1.0));
 
     // switch to hold mode, spin up the shooter
     AddSequential(new PrepareToShoot());
@@ -33,7 +33,7 @@ AutoCommand::AutoCommand() : CommandGroup("AutoCommand")
     AddSequential(new LowerBridge());
 
     // drive forward to cross line
-    AddSequential(new TimedDrive(0.0, -0.3, 0.0, 3.0));
+    AddSequential(new TimedDrive(0.0, -0.6, 0.0, 3.0));
 }
 
 AutoCommand::~AutoCommand()
