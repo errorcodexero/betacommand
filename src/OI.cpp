@@ -6,6 +6,7 @@
 #include "Commands/PrepareToShoot.h"
 #include "Commands/ShootBall.h"
 #include "Commands/StopMotors.h"
+#include <cstdio>
 
 std::map<OI::ControlMode, OI::ControlMap> OI::driverControlMap = {
     {
@@ -134,8 +135,12 @@ float OI::GetControllerAxis(Controller controller, AxisFunction function)
 bool OI::GetControllerButton(Controller controller, ButtonFunction function)
 {
     if (controller == kDriver) {
-	int button = driverControlMap[GetControllerType(0)].buttonMap[function];
-	return DriverStation::GetInstance()->GetStickButton(0, button);
+	if (driverControlMap[GetControllerType(0)].buttonMap.count(function)) {
+	    int button = driverControlMap[GetControllerType(0)].buttonMap[function];
+	    return DriverStation::GetInstance()->GetStickButton(0, button);
+	}
+	// no button mapped to this function on the current controller
+	return false;
     } else {
 	return false;
     }

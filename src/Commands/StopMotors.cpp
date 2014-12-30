@@ -1,11 +1,14 @@
 #include "StopMotors.h"
+#include "LowerKicker.h"
 #include "StopCollector.h"
 #include "StopShooter.h"
 
 
 StopMotors::StopMotors() : CommandGroup("StopMotors")
 {
-    // start in hold configuration (all these should terminate immediately)
+    // start in hold configuration
+    // all these should terminate almost immediately
+    AddParallel(new LowerKicker());
     AddParallel(new StopCollector());
     AddParallel(new StopShooter());
 }

@@ -1,4 +1,5 @@
 #include "ShootBall.h"
+#include "CatchMode.h"
 #include "CloseFingers.h"
 #include "LowerInjector.h"
 #include "LowerInjectorAndOpenFingers.h"
@@ -20,10 +21,8 @@ ShootBall::ShootBall() : CommandGroup("ShootBall")
     // launch ball
     AddSequential(new RaiseInjector());
 
-    // stop wheels, return to catch or collect configuration
-    AddParallel(new StopShooter());
-    AddParallel(new LowerInjectorAndOpenFingers());
-    AddSequential(new LowerBridge());
+    // stop wheels, return to catch configuration
+    AddSequential(new CatchMode());
 }
 
 ShootBall::~ShootBall()

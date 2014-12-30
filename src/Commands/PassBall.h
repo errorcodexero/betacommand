@@ -8,4 +8,6 @@ class PassBall : public CommandGroup
 public:
     PassBall();
     virtual ~PassBall();
+protected:
+    virtual void Interrupted();
 };

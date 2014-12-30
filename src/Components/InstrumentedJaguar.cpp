@@ -20,7 +20,7 @@ InstrumentedJaguar::InstrumentedJaguar( uint8_t deviceNumber ) :
     SmartDashboard::PutNumber(m_V.c_str(), 0.);
     SmartDashboard::PutNumber(m_I.c_str(), 0.);
     m_notifier = new Notifier(&timerEventHandler, this);
-    m_notifier->StartPeriodic(0.050);
+    m_notifier->StartPeriodic(0.250);
 }
 
 InstrumentedJaguar::~InstrumentedJaguar()

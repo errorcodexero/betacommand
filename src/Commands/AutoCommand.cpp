@@ -1,4 +1,5 @@
 #include "AutoCommand.h"
+#include "CatchMode.h"
 #include "CollectMode.h"
 #include "LowerBridge.h"
 #include "LowerInjectorAndOpenFingers.h"
@@ -27,10 +28,8 @@ AutoCommand::AutoCommand() : CommandGroup("AutoCommand")
     // shoot the second ball
     AddSequential(new RaiseInjector());
 
-    // stop shooter, switch to catch/collect configuration
-    AddParallel(new StopShooter());
-    AddParallel(new LowerInjectorAndOpenFingers());
-    AddSequential(new LowerBridge());
+    // stop shooter, switch to catch mode
+    AddParallel(new CatchMode());
 
     // drive forward to cross line
     AddSequential(new TimedDrive(0.0, -0.6, 0.0, 3.0));

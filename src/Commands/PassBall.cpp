@@ -1,4 +1,5 @@
 #include "PassBall.h"
+#include "../Robot.h"
 #include "StopShooter.h"
 #include "LowerBridge.h"
 #include "LowerInjector.h"
@@ -21,6 +22,11 @@ PassBall::PassBall() : CommandGroup("PassBall")
     AddSequential(new LowerKicker());
     AddSequential(new WaitCommand(3.0));
     AddSequential(new StopCollector());
+}
+
+void PassBall::Interrupted()
+{
+    Robot::kicker->Set(false);
 }
 
 PassBall::~PassBall()
